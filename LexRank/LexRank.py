@@ -22,10 +22,8 @@ class LexRank:
         self.tol = tol
         self.max_iter = max_iter
 
-
-        swedish_stopwords = self._get_swedish_stopwords() #och, det, att etc...
         self.vectorizer = TfidfVectorizer(
-            stop_words=swedish_stopwords,
+            stop_words="english",
             lowercase=True,
         )
     
@@ -53,25 +51,6 @@ class LexRank:
         summary = [sentences[i] for i in selected]
         return summary
 
-        # reduce redundancy
-        used_indices = set()
-        for idx in ranked_indices:
-            if len(summary) >= n_sentences:
-                break
-
-            too_similar = False
-            for j in used_indices:
-                if sim[idx, j] > 0.8:
-                    too_similar = True
-                    break
-            
-            if not too_similar:
-                used_indices.add(idx)
-                summary.append((idx, sentences[idx]))
-
-        summary = [s for _, s in sorted(summary, key=lambda x: x[0])]
-        return summary
-
     def lead_k_base_line(self, text: str, k: int) -> list[str]:
         """
         Returns the first k sentences of the text.
@@ -80,13 +59,6 @@ class LexRank:
         return self._split_sentences(text)[:k]
 
     #helper methods
-    def _get_swedish_stopwords(self) -> list[str]:
-        try:
-            return stopwords.words('swedish')
-        except LookupError:
-            nltk.download('stopwords', quiet=True)
-            return stopwords.words('swedish')
-
     def _split_sentences(self, text: str) -> list[str]:
         #simple tokenizer
         raw_sentences = re.split(r'(?<=[.!?])\s+', text.strip())
@@ -131,7 +103,7 @@ class ArticleSample:
 class CNNDailyMailCorpus:
     def __init__(self, path:str):
         self.path = path
-        self.samples = List[ArticleSample] = []
+        self.samples: List[ArticleSample] = []
         
         self._load()
     
@@ -142,7 +114,7 @@ class CNNDailyMailCorpus:
                 self.samples.append(
                     ArticleSample(
                         id=obj["id"],
-                        article=["article"],
+                        article=obj["article"],
                         highlights=obj["highlights"],
                     )
                 )
