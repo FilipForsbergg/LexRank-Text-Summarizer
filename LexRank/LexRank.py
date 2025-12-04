@@ -5,9 +5,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import json
 from dataclasses import dataclass
 from typing import List, Iterator
-import nltk
 from nltk.corpus import stopwords
 import re
+from datasets import load_dataset
 
 class LexRank:
     def __init__(
@@ -101,26 +101,40 @@ class ArticleSample:
     highlights: str
 
 class CNNDailyMailCorpus:
-    def __init__(self, path:str):
-        self.path = path
+    def __init__(self, amount: int = 5000):
         self.samples: List[ArticleSample] = []
-        
+        self.n = amount    
         self._load()
     
+    #public
+    def load_random_article(self):
+        """
+        Picks a random CNN article
+        """
+        rx: int = np.random.choice(self.n)
+        random_article = self.samples[rx]
+        text_to_sum = random_article["article"]
+        return text_to_sum
+    
     def _load(self):
-        with open(self.path, "r", encoding="utf-8") as f:
-            for line in f:
-                obj = json.loads(line)
-                self.samples.append(
-                    ArticleSample(
-                        id=obj["id"],
-                        article=obj["article"],
-                        highlights=obj["highlights"],
-                    )
+        """
+        Loads a subset of CNN/DailyMail articles
+        """
+        split="train"
+        n_samples=self.n
+        
+        subset_spec = f"{split}[:{n_samples}]"
+        dataset = load_dataset("cnn_dailymail", "3.0.0", split=subset_spec)
+
+        for a in dataset:
+            self.samples.append(
+                ArticleSample(
+                    id=a["id"],
+                    article=a["article"],
+                    highlights=["highlights"],
                 )
-                
-    def _save_samples(self):
-        pass
+            )
+
     def __len__(self) -> int:
         return len(self.samples)
 

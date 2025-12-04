@@ -13,8 +13,7 @@ def save_cnn_dailymail_subset(
     subset_spec = f"{split}[:{n_samples}]"
     dataset = load_dataset("cnn_dailymail", "3.0.0", split=subset_spec)
 
-    if not os.path.exists(save_path):
-        os.makedirs(os.path.dirname(save_path))
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
     with open(save_path, "w", encoding="utf-8") as f:
         for article in dataset:
