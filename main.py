@@ -4,19 +4,19 @@ import os
 
 def main():
     parser = argparse.ArgumentParser(description='LexRank text summarization')
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--file', '-f', type=str, help='Text file to summarize')
+    parser.add_argument('--file', '-f', type=str, help='Text file to summarize')
     parser.add_argument('--n_sentences', '-n', type=int, default=3, help='Amount of output sentences')
-    group.add_argument('--text', '-t', type=str, help='Text to summarize')
+    parser.add_argument('--text', '-t', type=str, help='Text to summarize')
 
     args = parser.parse_args()
     lexrank = LexRank()
 
     original_text = None
-    if file := args.file.strip():
+    if file := args.file:
+        file = file.strip()
         if not os.path.exists(file):
             raise ValueError("Filepath doesn't exist")
-        with open(file, 'r', encoding="utf-8") as f:
+        with open(file, 'r') as f:
             text_content = f.read()
         summary = lexrank.summarize(text=text_content, n_sentences=int(args.n_sentences))
     elif text := args.text:

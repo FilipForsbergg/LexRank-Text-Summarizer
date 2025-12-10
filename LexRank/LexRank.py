@@ -2,7 +2,6 @@ import numpy as np
 from numpy import linalg
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import json
 from dataclasses import dataclass
 from typing import List, Iterator
 from nltk.corpus import stopwords
@@ -10,6 +9,10 @@ import re
 from datasets import load_dataset
 
 class LexRank:
+    """
+    Implements the LexRank algorithm for extractive summarization.
+    Based on cosine similarity and PageRank over sentence graphs.
+    """
     def __init__(
             self,
             threshold: float = 0.1,
@@ -113,7 +116,7 @@ class CNNDailyMailCorpus:
         """
         rx: int = np.random.choice(self.n)
         random_article = self.samples[rx]
-        text_to_sum = random_article["article"]
+        text_to_sum = random_article.article
         return text_to_sum
     
     def _load(self):
@@ -131,7 +134,7 @@ class CNNDailyMailCorpus:
                 ArticleSample(
                     id=a["id"],
                     article=a["article"],
-                    highlights=["highlights"],
+                    highlights=a["highlights"],
                 )
             )
 

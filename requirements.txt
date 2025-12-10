@@ -3,3 +3,5 @@ pandas
 nltk
 scikit-learn
 datasets
+rouge-score
+gradio
