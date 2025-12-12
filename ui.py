@@ -1,7 +1,8 @@
 import gradio as gr
-from LexRank.LexRank import LexRank, CNNDailyMailCorpus
+from LexTexRank.LexTexRank import LexRank, TextRank, CNNDailyMailCorpus
 
 lexrank = LexRank()
+textrank = TextRank()
 
 corpus = CNNDailyMailCorpus(amount=1000)
 
@@ -14,6 +15,8 @@ def summarize_interface(text, method, n_sentences):
 
     if method == "LexRank":
         sentences = lexrank.summarize(text, n_sentences=n)
+    elif method == "TextRank":
+        sentences = textrank.summarize(text, n_sentences=n)
     else:  # Lead-k
         sentences = lexrank.lead_k_base_line(text, k=n)
 
@@ -33,7 +36,7 @@ def load_example_article():
 with gr.Blocks(title="LexRank Text Summarizer") as demo:
     gr.Markdown(
         """
-        # LexRank Text Summarizer  
+        # Lex/Text-Rank Text Summarizer  
         Klistra in en artikel eller använd en slumpad CNN/DailyMail-artikel.
         Välj metod och antal meningar, och klicka på **Sammanfatta**.
         """
@@ -48,7 +51,7 @@ with gr.Blocks(title="LexRank Text Summarizer") as demo:
 
     with gr.Row():
         method_input = gr.Radio(
-            ["LexRank", "Lead-k"],
+            ["LexRank", "TextRank", "Lead-k"],
             value="LexRank",
             label="Metod",
         )
