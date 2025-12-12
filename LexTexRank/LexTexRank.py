@@ -72,7 +72,7 @@ class BaseGraphRankSummarizer:
     def _split_sentences(self, text: str) -> List[str]:
         """Enkel meningssegmentering med regex."""
         raw = re.split(r'(?<=[.!?])\s+', text.strip())
-        return [s.strip() for s in raw if s.strip()],
+        return [s.strip() for s in raw if s.strip()]
 
     def _build_adjacency_matrix(self, sim_matrix: np.ndarray) -> np.ndarray:
         adj = np.where(sim_matrix > self.threshold, sim_matrix, 0.0)
