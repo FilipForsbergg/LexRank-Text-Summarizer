@@ -2,6 +2,10 @@ import os
 import json
 from datasets import load_dataset
 
+"""
+If you want to manually save a local subset of articles for speed.
+"""
+
 def save_cnn_dailymail_subset(
         split: str = "train",
         n_samples: int = 5000,

@@ -1,5 +1,5 @@
 import numpy as np
-from LexRank.LexRank import LexRank, CNNDailyMailCorpus
+from LexTexRank.LexTexRank import LexRank, CNNDailyMailCorpus
 from rouge_score import rouge_scorer
 
 
