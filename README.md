@@ -1,2 +1,2 @@
 # LexRank-Text-Summarizer
-Text summarization with LexRank
+Automatic summarization of News Articles with Lex- and TextRank algorithm.
